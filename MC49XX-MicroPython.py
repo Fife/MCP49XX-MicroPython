@@ -25,7 +25,7 @@
     #Output Gain Selecetion (x1, x2)
     #Shutdown Control
 
-#Desired interface:
+#Desired interface example:
 
 #myObg = MCP() - Minimal Instantiation with all defaults
 #myObj = MCP(BITS, CS_PIN, SDI_PIN, LDAC) - Instantiates instance of chip with all params in constructor
@@ -35,8 +35,16 @@
 #myObj.shutDown(True)- Shutdown Control
 #myObj.setLDAC(PIN)- Set Latch DAC/Any other interface params
 
-
-
+#Implementation TODOS: 
+    #Setup Methods
+        #SPI superconstructor 
+        #Interface pin instantiation
+        #Vref 
+    #Control Methods 
+        #Write to the DAC 
+        #Buffered/Unbuffered Mode
+        #Output Gain Selecetion (x1, x2)
+        #Shutdown Control
 
 #Test load of dependancies
 from machine import SPI
