@@ -28,7 +28,7 @@
 #Desired interface example:
 
 #myObg = MCP() - Minimal Instantiation with all defaults
-#myObj = MCP(BITS, CS_PIN, SDI_PIN, LDAC) - Instantiates instance of chip with all params in constructor
+#myObj = MCP(BITS, CS_PIN, SDI_PIN, LDAC, VREF, GAIN, BUFFER_MODE)  - Instantiates instance of chip with all params in constructor
 #myObj.write(1.26) - Wrting values
 #myObj.setGain(2) - Setting Gain
 #myObj.setBuffer(True)- Setting Buffer
