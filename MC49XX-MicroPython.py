@@ -48,13 +48,16 @@
 
 
 from machine import SPI
+from machine import SoftSPI
+from machine import ADC
 from machine import Pin
 #from ubitstring import *
 
 class MCP():
     def __init__(self, name, csPin):
         if (name == "MCP4901"):
-            self.spiInstance = SPI(0,500_000, polarity=0, phase=0 , bits=16, firstbit=SPI.MSB)
+            
+            self.spiInstance = SoftSPI(sck=Pin(6), mosi=Pin(7), miso=Pin(4))
             self.dataBitSize = 8
             self.gain = True
             self.vRef = 3.3
@@ -63,7 +66,7 @@ class MCP():
             self.chipSelectPin = Pin(csPin, Pin.OUT, Pin.PULL_UP)
             
         elif (name == "MCP4911"):
-            self.spiInstance = SPI(0,100_000, polarity=1, phase=1, bits=16)
+            self.spiInstance = SoftSPI(sck=Pin(6), mosi=Pin(7), miso=Pin(4))
             self.dataBitSize = 10
             self.gain = True
             self.vRef = 3.33
@@ -72,7 +75,7 @@ class MCP():
             self.chipSelectPin = Pin(csPin, Pin.OUT, Pin.PULL_UP)
             
         elif (name == "MCP4921"):
-            self.spiInstance = SPI(0,100_000, polarity=1, phase=1, bits=16)
+            self.spiInstance = SoftSPI(sck=Pin(6), mosi=Pin(7), miso=Pin(4))
             self.dataBitSize = 12
             self.gain = True
             self.vRef = 3.33
@@ -81,7 +84,8 @@ class MCP():
             self.chipSelectPin = Pin(csPin, Pin.OUT, Pin.PULL_UP)
             
     def __genFrame(self, value):
-        return bin(self.bufferMode*2**14+self.gain*2**13+self.isOn*2**12+(value<<(12-self.dataBitSize)))
+        tempVal = self.bufferMode*2**14+self.gain*2**13+self.isOn*2**12+(value<<(12-self.dataBitSize))
+        return tempVal.to_bytes(2, 'big')
     
     def __voltToValue(self,volt):
         if(volt>self.vRef) : volt = self.vRef
@@ -109,16 +113,13 @@ class MCP():
     def setBufferMode(self, flag):
         self.bufferMode = flag
 
-CLK_SELECT = 9
-myMCP = MCP("MCP4901", CLK_SELECT)
-myMCP.writeVolt(3.3)
+#Test code 
+C_SELECT = 9
+myMCP = MCP("MCP4901", C_SELECT)
+myMCP.writeVolt(2.9)
 
+value = machine.ADC(26)
+reading = value.read_u16()
 
-    
-    
-
-
-
-
-
+print(reading)
 
