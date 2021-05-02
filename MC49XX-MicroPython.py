@@ -13,9 +13,9 @@
     #Number of don't care bits (Resolution of data bits)
         #12-bit, 10-bit, 8-bit
     #Interface Pins (outputs of micro controller): 
-        #SCK- Serial Clock - Default Pin: 6
+        #SCK- Serial Clock - Pin 6
         #CS- Chip Select - Default Pin: N/A (Must be defined)
-        #SDI- Serial Data Input - Default Pin: N/A (Must be defined)
+        #SDI- Serial Data Input - Pin 4
         #LDAC Latch DAC Input - Default Pin: N/A(Must be defined) 
     #VRef - 3.3V-5V (3.3V Default)
 
@@ -28,11 +28,11 @@
 #Desired interface example:
 
 #myObg = MCP() - Minimal Instantiation with all defaults
-#myObj = MCP(BITS, CS_PIN, SDI_PIN, LDAC, VREF, GAIN, BUFFER_MODE)  - Instantiates instance of chip with all params in constructor
+#myObj = MCP(BITS, CS_PIN, SDI_PIN, LDAC, VREF, GAIN, BUFFER_MODE) - Instantiates instance of chip with all params in constructor
 #myObj.write(1.26) - Wrting values
-#myObj.setGain(2) - Setting Gain
-#myObj.setBuffer(True)- Setting Buffer
-#myObj.shutDown(True)- Shutdown Control
+#myObj.setGainFlag(True) - Setting Gain
+#myObj.setBufferFlag(True)- Setting Buffer
+#myObj.shutdown(True)- Shutdown Control
 #myObj.setLDAC(PIN)- Set Latch DAC/Any other interface params
 
 #Implementation TODOS: 
@@ -46,10 +46,79 @@
         #Output Gain Selecetion (x1, x2)
         #Shutdown Control
 
-#Test load of dependancies
+
 from machine import SPI
-from ubitstring import Bits
-spi = SPI(0)
-print("Hello")
+from machine import Pin
+#from ubitstring import *
+
+class MCP():
+    def __init__(self, name, csPin):
+        if (name == "MCP4901"):
+            self.spiInstance = SPI(0,500_000, polarity=0, phase=0 , bits=16, firstbit=SPI.MSB)
+            self.dataBitSize = 8
+            self.gain = True
+            self.vRef = 3.3
+            self.bufferMode = False
+            self.isOn = True
+            self.chipSelectPin = Pin(csPin, Pin.OUT, Pin.PULL_UP)
+            
+        elif (name == "MCP4911"):
+            self.spiInstance = SPI(0,100_000, polarity=1, phase=1, bits=16)
+            self.dataBitSize = 10
+            self.gain = True
+            self.vRef = 3.33
+            self.bufferMode = True
+            self.isOn = True
+            self.chipSelectPin = Pin(csPin, Pin.OUT, Pin.PULL_UP)
+            
+        elif (name == "MCP4921"):
+            self.spiInstance = SPI(0,100_000, polarity=1, phase=1, bits=16)
+            self.dataBitSize = 12
+            self.gain = True
+            self.vRef = 3.33
+            self.bufferMode = True
+            self.isOn = True
+            self.chipSelectPin = Pin(csPin, Pin.OUT, Pin.PULL_UP)
+            
+    def __genFrame(self, value):
+        return bin(self.bufferMode*2**14+self.gain*2**13+self.isOn*2**12+(value<<(12-self.dataBitSize)))
+    
+    def __voltToValue(self,volt):
+        if(volt>self.vRef) : volt = self.vRef
+        value = round(volt*(2**self.dataBitSize) /self.vRef)
+        if (value == 2**self.dataBitSize): value = value -1
+        return value
+    
+    def writeVolt(self, volt):
+        value = self.__voltToValue(volt)
+        frame = self.__genFrame(value)
+        self.chipSelectPin.low()
+        self.spiInstance.write(frame)
+        self.chipSelectPin.high()
+        #print(frame) #Debug
+    
+    def shutdown(self):
+        self.isOn = False
+        
+    def restart(self):
+        self.isOn = True
+        
+    def setGainFlag(self, flag):
+        self.gain = flag
+    
+    def setBufferMode(self, flag):
+        self.bufferMode = flag
+
+CLK_SELECT = 9
+myMCP = MCP("MCP4901", CLK_SELECT)
+myMCP.writeVolt(3.3)
+
+
+    
+    
+
+
+
+
 
 
