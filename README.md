@@ -7,21 +7,21 @@ Use the following code to test the library on a pi Pico. Setup the circuit Accor
 
 MCP4901 Example:
 
-MCP Pin 1 --> RPi Pico 3V3 OUT (Pin 37)
+MCP4901 Pin 1 --> RPi Pico 3V3 OUT (Pin 37)
 
-MCP Pin 2 --> GPIO Pin 9
+MCP4901 Pin 2 --> GPIO Pin 9
 
-MCP Pin 3 --> GPIO Pin 6
+MCP4901 Pin 3 --> GPIO Pin 6
 
-MCP Pin 4 --> GPIO Pin 7
+MCP4901 Pin 4 --> GPIO Pin 7
 
-MCP Pin 5 --> Ground
+MCP4901 Pin 5 --> Ground
 
-MCP Pin 6 --> Rpi Pico 3v3 OUT (Pin 37)
+MCP4901 Pin 6 --> Rpi Pico 3v3 OUT (Pin 37)
 
-MCP Pin 7 --> Ground
+MCP4901 Pin 7 --> Ground
 
-MCP Pin 8 --> Rpi Pico GPIO Pin 26 (ADC(0))
+MCP4901 Pin 8 --> Rpi Pico GPIO Pin 26 (ADC(0))
 
 Run the code as seein in [example.py](https://github.com/GermanWaffles/MCP49XX-MicroPython/blob/main/example.py)
 
