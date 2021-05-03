@@ -23,7 +23,7 @@ MCP Pin 7 --> Ground
 
 MCP Pin 8 --> Rpi Pico GPIO Pin 26 (ADC(0))
 
-Run the code as seein in [example.py](.../MCP49XX-MicroPython/example.py)
+Run the code as seein in [example.py](https://github.com/GermanWaffles/MCP49XX-MicroPython/blob/main/example.py)
 
 ```python
 from MCP49XX import MCP
