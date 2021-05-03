@@ -25,6 +25,7 @@ MCP4901 Pin 8 --> Rpi Pico GPIO Pin 26 (ADC(0))
 
 Run the code as seein in [example.py](https://github.com/GermanWaffles/MCP49XX-MicroPython/blob/main/example.py)
 
+
 ```python
 from MCP49XX import MCP
 
@@ -40,3 +41,11 @@ reading = value.read_u16() #Read output of the MCPXX
 
 print(reading)
 ```
+
+If everything is working correctly, a value near 32768 will print out on the terminal. Replacing "1.65" to "3.33"  in the writeVolt function should yield a value near 65536.
+
+Note that this number may not be exact for a few reasons (It should be very close though):
+
+1. If you are using a MCP4901, there are only 8 bits of signal resolution. This limits the precision of the output reading because the ADC input resolution is 12-bits, which get scaled up to a 16 bit result in micropython. Rounding errors across multiple scaling functions can happen.      
+2. Since there is only 1 ADC onboard the pi Pico, but multiple channels, the ADC scans each pin regardless of whether or not the inpts are connected, and the noise on those unused pins will affect the reading accuracy slightly. To reduce this noise, connect the unused ADC pins on the pi Pico to ground. 
+3. It is recommended by the MCP49XX manufacturer that bypass capacitor(s) are used across voltage supply (+, - rails). This is optional, but doing so reduces the noise on the DAC output pin. 
